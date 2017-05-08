@@ -1,0 +1,22 @@
+<h1>Location categories</h1>
+
+<!--Countires-->
+<h3 class="first">Countires</h3>
+<p-dropdown [options]="contiresArray" [(ngModel)]="countrySelectedValue" [style]="{'width':'150px'}"
+            (onChange)="onCountryChange()" placeholder="Select a Country"></p-dropdown>
+<p>Selected City: {{countrySelectedValue ? countrySelectedValue.name : 'none'}}</p>
+
+<!--cities-->
+<h3 class="first">cities</h3>
+<p-dropdown [options]="citiesSelectedArray" [(ngModel)]="citiesSelectedValue" [style]="{'width':'150px'}"
+            (onChange)="onCityChange()" placeholder="Select a City"></p-dropdown>
+<p>Selected City: {{citiesSelectedValue ? citiesSelectedValue.name : 'none'}}</p>
+
+<tr *ngFor="let locationCat of locationCats;let i = index">
+    category: <td>{{locationCat.categoryName}} </td>
+    <input type="text" name="rating" [(ngModel)]="locationCat.rating">
+</tr>
+
+
+
+<button type="submit" (click)="saveChanges()" >Submit</button>
