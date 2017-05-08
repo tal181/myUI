@@ -6,7 +6,10 @@ var Utils = (function () {
     }
     Utils.getUserFromStorage = function () {
         var userFromStorage = localStorage.getItem('currentUser');
-        var loginName = JSON.parse(userFromStorage).loginName;
+        var loginName = "";
+        if (userFromStorage) {
+            loginName = JSON.parse(userFromStorage).loginName;
+        }
         var user = new user_1.User(loginName);
         return user;
     };

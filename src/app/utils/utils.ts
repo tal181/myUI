@@ -4,9 +4,13 @@ import {RequestOptions} from "@angular/http";
 export class Utils{
     public static getUserFromStorage(): User {
         let userFromStorage = localStorage.getItem('currentUser');
-        let loginName = JSON.parse(userFromStorage).loginName;
-       let user = new User(loginName);
-       return user;
+        let loginName = "";
+        if(userFromStorage){
+            loginName = JSON.parse(userFromStorage).loginName;
+        }
+
+        let user = new User(loginName);
+        return user;
     }
 
     public static getUserTokenFromStorage(): string {
