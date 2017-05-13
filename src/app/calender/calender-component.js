@@ -81,15 +81,17 @@ var CalenderComponent = (function () {
                 var endIndex = Math.min(startIndex + _this.numberOfActivitiesPerDay, _this.bestActivities.length);
                 var subArray = _this.bestActivities.slice(startIndex, endIndex);
                 startIndex += _this.numberOfActivitiesPerDay;
+                var startHour = 60;
                 for (var index2 = 0; index2 < subArray.length; index2++) {
                     var event_1 = {
-                        start: date_fns_1.addHours(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), 1 + index2),
-                        end: date_fns_1.addHours(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), 2 + index2),
+                        start: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), startHour),
+                        end: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), startHour + subArray[index2].suggestedDuration),
                         title: subArray[index2].activityName,
                         color: colors.red,
                         actions: _this.actions
                     };
                     _this.events.push(event_1);
+                    startHour += subArray[index2].suggestedDuration;
                 }
                 day++;
             }

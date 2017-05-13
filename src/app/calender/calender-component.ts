@@ -7,7 +7,8 @@ import {
     endOfMonth,
     isSameDay,
     isSameMonth,
-    addHours
+    addHours,
+    addMinutes
 } from 'date-fns';
 import { Subject } from 'rxjs/Subject';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -102,15 +103,16 @@ export class CalenderComponent  implements AfterViewInit  {
                     let endIndex=Math.min(startIndex+this.numberOfActivitiesPerDay,this.bestActivities.length);
                     let subArray = this.bestActivities.slice(startIndex,endIndex);
                     startIndex+=this.numberOfActivitiesPerDay;
-
+                    let startHour=60;
                     for(let index2=0;index2<subArray.length;index2++){
                         let event = {
-                            start : addHours(addDays(startOfDay(new Date()), day),1+index2),
-                            end : addHours(addDays(startOfDay(new Date()), day),2+index2),
+                            start : addMinutes(addDays(startOfDay(new Date()), day),startHour),
+                            end : addMinutes(addDays(startOfDay(new Date()), day),startHour+subArray[index2].suggestedDuration),
                             title : subArray[index2].activityName,
                             color : colors.red,
                             actions : this.actions};
                         this.events.push(event);
+                        startHour+=subArray[index2].suggestedDuration;
                     }
                     day++;
                 }
