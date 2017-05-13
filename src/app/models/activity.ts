@@ -4,4 +4,5 @@ export class Activity {
     activityName: string;
     rating: number ;
     activityId: number;
+    suggestedDuration: string;
 }

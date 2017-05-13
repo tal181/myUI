@@ -30,8 +30,8 @@ var colors = {
         secondary: '#FDF1BA'
     }
 };
-var DemoComponent = (function () {
-    function DemoComponent(modal, computeService, activityService) {
+var CalenderComponent = (function () {
+    function CalenderComponent(modal, computeService, activityService) {
         var _this = this;
         this.modal = modal;
         this.computeService = computeService;
@@ -55,33 +55,43 @@ var DemoComponent = (function () {
                 }
             }];
         this.user = utils_1.Utils.getUserFromStorage();
+        this.numberOfActivities = 9;
+        this.numberOfActivitiesPerDay = 3;
     }
-    DemoComponent.prototype.ngAfterViewInit = function () {
+    CalenderComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        this.computeService.compute(this.user.loginName)
+        this.computeService.compute(this.user.loginName, this.numberOfActivities)
             .then(function (ans) {
             _this.comutedArray = ans;
-            _this.getBestActivities(ans[0].location);
+            _this.getBestActivities(ans[0].location, _this.numberOfActivities);
         })
-            .catch(function () {
-            console.log("You remembered to check for errors!");
+            .catch(function (error) {
+            console.log("You remembered to check for errors!" + error);
         });
     };
-    DemoComponent.prototype.getBestActivities = function (location) {
+    CalenderComponent.prototype.getBestActivities = function (location, countResults) {
         var _this = this;
-        this.activityService.getBestActivitiesByLocation(location)
+        this.activityService.getBestActivitiesByLocation(location, countResults)
             .then(function (ans) {
             _this.events = [];
             _this.bestActivities = ans;
-            for (var index = 0; index < _this.bestActivities.length; index++) {
-                var event_1 = {
-                    start: date_fns_1.subDays(date_fns_1.startOfDay(new Date()), 1),
-                    end: date_fns_1.subDays(date_fns_1.startOfDay(new Date()), 1),
-                    title: _this.bestActivities[index].activityName,
-                    color: colors.red,
-                    actions: _this.actions
-                };
-                _this.events.push(event_1);
+            var startIndex = 0;
+            var day = 1;
+            while (startIndex < _this.bestActivities.length) {
+                var endIndex = Math.min(startIndex + _this.numberOfActivitiesPerDay, _this.bestActivities.length);
+                var subArray = _this.bestActivities.slice(startIndex, endIndex);
+                startIndex += _this.numberOfActivitiesPerDay;
+                for (var index2 = 0; index2 < subArray.length; index2++) {
+                    var event_1 = {
+                        start: date_fns_1.addHours(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), 1 + index2),
+                        end: date_fns_1.addHours(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), 2 + index2),
+                        title: subArray[index2].activityName,
+                        color: colors.red,
+                        actions: _this.actions
+                    };
+                    _this.events.push(event_1);
+                }
+                day++;
             }
             // this.bestActivities.forEach(function(activity: Activity){
             //     let event ={};
@@ -125,7 +135,7 @@ var DemoComponent = (function () {
             console.log("You remembered to check for errors! " + error);
         });
     };
-    DemoComponent.prototype.dayClicked = function (_a) {
+    CalenderComponent.prototype.dayClicked = function (_a) {
         var date = _a.date, events = _a.events;
         if (date_fns_1.isSameMonth(date, this.viewDate)) {
             if ((date_fns_1.isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -138,18 +148,18 @@ var DemoComponent = (function () {
             }
         }
     };
-    DemoComponent.prototype.eventTimesChanged = function (_a) {
+    CalenderComponent.prototype.eventTimesChanged = function (_a) {
         var event = _a.event, newStart = _a.newStart, newEnd = _a.newEnd;
         event.start = newStart;
         event.end = newEnd;
         this.handleEvent('Dropped or resized', event);
         this.refresh.next();
     };
-    DemoComponent.prototype.handleEvent = function (action, event) {
+    CalenderComponent.prototype.handleEvent = function (action, event) {
         this.modalData = { event: event, action: action };
         this.modal.open(this.modalContent, { size: 'lg' });
     };
-    DemoComponent.prototype.addEvent = function () {
+    CalenderComponent.prototype.addEvent = function () {
         this.events.push({
             title: 'New event',
             start: date_fns_1.startOfDay(new Date()),
@@ -163,13 +173,13 @@ var DemoComponent = (function () {
         });
         this.refresh.next();
     };
-    return DemoComponent;
+    return CalenderComponent;
 }());
 __decorate([
     core_1.ViewChild('modalContent'),
     __metadata("design:type", core_1.TemplateRef)
-], DemoComponent.prototype, "modalContent", void 0);
-DemoComponent = __decorate([
+], CalenderComponent.prototype, "modalContent", void 0);
+CalenderComponent = __decorate([
     core_1.Component({
         selector: 'mwl-demo-component',
         changeDetection: core_1.ChangeDetectionStrategy.Default,
@@ -179,6 +189,6 @@ DemoComponent = __decorate([
     __metadata("design:paramtypes", [ng_bootstrap_1.NgbModal,
         compute_service_1.ComputeService,
         activity_service_1.ActivityService])
-], DemoComponent);
-exports.DemoComponent = DemoComponent;
-//# sourceMappingURL=component.js.map
+], CalenderComponent);
+exports.CalenderComponent = CalenderComponent;
+//# sourceMappingURL=calender-component.js.map

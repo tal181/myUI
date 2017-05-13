@@ -39,4 +39,4 @@ UserCategoriesComponent = __decorate([
     __metadata("design:paramtypes", [locationCategories_service_1.UserCategoriesService])
 ], UserCategoriesComponent);
 exports.UserCategoriesComponent = UserCategoriesComponent;
-//# sourceMappingURL=locationCategories.component.js.map
+//# sourceMappingURL=locationCategories.calender-component.js.mapnt.js.map

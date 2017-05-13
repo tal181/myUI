@@ -44,7 +44,7 @@ const colors: any = {
     styleUrls: ['./styles.css'],
     templateUrl: './template.html'
 })
-export class DemoComponent  implements AfterViewInit  {
+export class CalenderComponent  implements AfterViewInit  {
 
     @ViewChild('modalContent') modalContent: TemplateRef<any>;
 
@@ -56,6 +56,8 @@ export class DemoComponent  implements AfterViewInit  {
     bestActivities: Activity[];
     user: User;
     events: CalendarEvent[];
+    numberOfActivities: number;
+    numberOfActivitiesPerDay: number;
 
     modalData: {
         action: string,
@@ -70,37 +72,49 @@ export class DemoComponent  implements AfterViewInit  {
                 private   computeService: ComputeService,
                 private activityService: ActivityService) {
         this.user = Utils.getUserFromStorage();
+        this.numberOfActivities=9;
+        this.numberOfActivitiesPerDay=3;
 
     }
 
     ngAfterViewInit(): void {
 
-        this.computeService.compute(this.user.loginName)
+        this.computeService.compute(this.user.loginName, this.numberOfActivities)
             .then((ans: Category[]) => {
                 this.comutedArray = ans;
-                this.getBestActivities(ans[0].location);
+                this.getBestActivities(ans[0].location,this.numberOfActivities);
             })
-            .catch(() => {
-                console.log("You remembered to check for errors!");
+            .catch((error) => {
+                console.log("You remembered to check for errors!" + error);
             });
 
 
     }
 
-    getBestActivities(location: string): void{
-        this.activityService.getBestActivitiesByLocation(location)
+    getBestActivities(location: string,countResults: number): void{
+        this.activityService.getBestActivitiesByLocation(location, countResults)
             .then((ans: Activity[]) => {
                 this.events=[];
                 this.bestActivities=ans;
-                for(let index=0;index<this.bestActivities.length;index++){
-                    let event = {
-                    start : subDays(startOfDay(new Date()), 1),
-                    end : subDays(startOfDay(new Date()), 1),
-                    title : this.bestActivities[index].activityName,
-                    color : colors.red,
-                    actions : this.actions};
-                    this.events.push(event);
+                let startIndex=0;
+                let day=1;
+                while(startIndex<this.bestActivities.length){
+                    let endIndex=Math.min(startIndex+this.numberOfActivitiesPerDay,this.bestActivities.length);
+                    let subArray = this.bestActivities.slice(startIndex,endIndex);
+                    startIndex+=this.numberOfActivitiesPerDay;
+
+                    for(let index2=0;index2<subArray.length;index2++){
+                        let event = {
+                            start : addHours(addDays(startOfDay(new Date()), day),1+index2),
+                            end : addHours(addDays(startOfDay(new Date()), day),2+index2),
+                            title : subArray[index2].activityName,
+                            color : colors.red,
+                            actions : this.actions};
+                        this.events.push(event);
+                    }
+                    day++;
                 }
+
                 // this.bestActivities.forEach(function(activity: Activity){
                 //     let event ={};
                 //     event.start= subDays(startOfDay(new Date()), 1);

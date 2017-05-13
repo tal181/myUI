@@ -11,11 +11,11 @@ export class ComputeService {
 
     constructor(private http: Http) {
     }
-    compute(loginName: string): Promise<Category[]> {
+    compute(loginName: string,numberOfActivities: number): Promise<Category[]> {
         let token = Utils.getUserTokenFromStorage();
         let headers = new Headers();
         headers.append('Authorization' , token);
-        return this.http.get(this.host + this.restPath +"/" +loginName, {headers : headers})
+        return this.http.get(this.host + this.restPath +"/" +loginName +"?numberOfActivities="+ numberOfActivities , {headers : headers})
             .toPromise()
             .then(response =>
                 response.json()

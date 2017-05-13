@@ -49,4 +49,4 @@ LocationCategoriesComponent = __decorate([
         allCategories_service_1.AllCategoriesService])
 ], LocationCategoriesComponent);
 exports.LocationCategoriesComponent = LocationCategoriesComponent;
-//# sourceMappingURL=locationCategories.component.js.map
+//# sourceMappingURL=locationCategories.calender-component.js.mapnt.js.map

@@ -29,13 +29,16 @@ var animations_1 = require("@angular/platform-browser/animations");
 var angular_calendar_1 = require("angular-calendar");
 var platform_browser_1 = require("@angular/platform-browser");
 var calendar_header_component_1 = require("./calender/calendar-header.component");
-var component_1 = require("./calender/component");
+var calender_component_1 = require("./calender/calender-component");
 var common_1 = require("@angular/common");
 // import {DateTimePickerComponent} from "./calender/date-time-picker.component";
 var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var primeng_1 = require("primeng/primeng");
 var primeng_2 = require("primeng/primeng");
 var primeng_3 = require("primeng/primeng");
+var primeng_4 = require("primeng/primeng");
+var tripPlan_component_1 = require("./tripPlan/tripPlan.component");
+var tripPlan_service_1 = require("./tripPlan/services/tripPlan.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -54,9 +57,10 @@ AppModule = __decorate([
             http_1.HttpModule,
             navbar_module_1.NavbarModule,
             common_1.CommonModule,
-            primeng_1.AutoCompleteModule,
-            primeng_2.GrowlModule,
-            primeng_3.DropdownModule
+            primeng_2.AutoCompleteModule,
+            primeng_3.GrowlModule,
+            primeng_4.DropdownModule,
+            primeng_1.InputTextModule
         ],
         declarations: [
             app_component_1.AppComponent,
@@ -64,8 +68,9 @@ AppModule = __decorate([
             avtar_component_1.AvtarComponent,
             userCategories_component_1.UserCategoriesComponent,
             locationCategories_component_1.LocationCategoriesComponent,
-            component_1.DemoComponent,
-            calendar_header_component_1.CalendarHeaderComponent
+            calender_component_1.CalenderComponent,
+            calendar_header_component_1.CalendarHeaderComponent,
+            tripPlan_component_1.TripPlanComponent
             // DateTimePickerComponent
         ],
         providers: [
@@ -77,10 +82,11 @@ AppModule = __decorate([
             allCategories_service_1.AllCategoriesService,
             countriess_service_1.CountriesService,
             compute_service_1.ComputeService,
-            activity_service_1.ActivityService
+            activity_service_1.ActivityService,
+            tripPlan_service_1.TripPlanService
         ],
         exports: [
-            component_1.DemoComponent
+            calender_component_1.CalenderComponent
         ],
         bootstrap: [app_component_1.AppComponent]
     })

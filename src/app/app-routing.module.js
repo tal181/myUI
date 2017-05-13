@@ -13,7 +13,8 @@ var auth_guard_1 = require("./guard/auth.guard");
 var navbar_component_1 = require("./navbar/navbar.component");
 var userCategories_component_1 = require("./userCategories/userCategories.component");
 var locationCategories_component_1 = require("./locationCategories/locationCategories.component");
-var component_1 = require("./calender/component");
+var calender_component_1 = require("./calender/calender-component");
+var tripPlan_component_1 = require("./tripPlan/tripPlan.component");
 var routes = [
     // { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: '', component: navbar_component_1.NavbarComponent, canActivate: [auth_guard_1.AuthGuard] },
@@ -21,7 +22,8 @@ var routes = [
     { path: 'location', component: locationCategories_component_1.LocationCategoriesComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'nav', component: navbar_component_1.NavbarComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: 'userCat', component: userCategories_component_1.UserCategoriesComponent, canActivate: [auth_guard_1.AuthGuard] },
-    { path: 'cal', component: component_1.DemoComponent },
+    { path: 'cal', component: calender_component_1.CalenderComponent, canActivate: [auth_guard_1.AuthGuard] },
+    { path: 'plan', component: tripPlan_component_1.TripPlanComponent, canActivate: [auth_guard_1.AuthGuard] },
     { path: '**', redirectTo: '' }
 ];
 var AppRoutingModule = (function () {

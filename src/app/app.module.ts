@@ -26,14 +26,17 @@ import { CalendarModule } from 'angular-calendar';
 import { BrowserModule } from '@angular/platform-browser';
 
 import {CalendarHeaderComponent} from "./calender/calendar-header.component";
-import {DemoComponent} from "./calender/component";
+import {CalenderComponent} from "./calender/calender-component";
 import { CommonModule } from '@angular/common';
 // import {DateTimePickerComponent} from "./calender/date-time-picker.component";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
+import {InputTextModule} from 'primeng/primeng';
 import {AutoCompleteModule} from 'primeng/primeng';
 import {GrowlModule} from 'primeng/primeng';
 import {DropdownModule} from 'primeng/primeng';
+import {TripPlanComponent} from "./tripPlan/tripPlan.component";
+import {TripPlanService} from "./tripPlan/services/tripPlan.service";
 @NgModule({
   imports: [
       BrowserAnimationsModule,
@@ -48,7 +51,8 @@ import {DropdownModule} from 'primeng/primeng';
       CommonModule,
       AutoCompleteModule,
       GrowlModule,
-      DropdownModule
+      DropdownModule,
+      InputTextModule
 
   ],
   declarations: [
@@ -57,8 +61,9 @@ import {DropdownModule} from 'primeng/primeng';
     AvtarComponent,
     UserCategoriesComponent,
     LocationCategoriesComponent,
-      DemoComponent,
-      CalendarHeaderComponent
+    CalenderComponent,
+    CalendarHeaderComponent,
+      TripPlanComponent
       // DateTimePickerComponent
 
   ],
@@ -71,10 +76,11 @@ import {DropdownModule} from 'primeng/primeng';
       AllCategoriesService,
       CountriesService,
       ComputeService,
-      ActivityService
+      ActivityService,
+      TripPlanService
   ],
    exports: [
-      DemoComponent],
+       CalenderComponent],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
