@@ -14,16 +14,29 @@ var tripPlan_service_1 = require("./services/tripPlan.service");
 var utils_1 = require("../utils/utils");
 var userTrip_1 = require("../models/userTrip");
 var router_1 = require("@angular/router");
+var compute_service_1 = require("../compute/services/compute.service");
 var TripPlanComponent = (function () {
-    function TripPlanComponent(tripPlanService, router) {
+    function TripPlanComponent(tripPlanService, computeService, router) {
         this.tripPlanService = tripPlanService;
+        this.computeService = computeService;
         this.router = router;
         this.user = utils_1.Utils.getUserFromStorage();
     }
     TripPlanComponent.prototype.ngOnInit = function () {
+        this.numberOfLocations = 3;
     };
-    TripPlanComponent.prototype.navigateToCal = function () {
-        this.router.navigate(['/cal']);
+    TripPlanComponent.prototype.compute = function () {
+        var _this = this;
+        this.computeService.compute(this.user.loginName, this.numberOfLocations)
+            .then(function (ans) {
+            _this.comutedArray = ans;
+        })
+            .catch(function (error) {
+            console.log("You remembered to check for errors!" + error);
+        });
+    };
+    TripPlanComponent.prototype.navigateToCal = function (location) {
+        this.router.navigate(['/cal'], { queryParams: { location: location } });
     };
     TripPlanComponent.prototype.getUserTrips = function () {
         var _this = this;
@@ -37,14 +50,13 @@ var TripPlanComponent = (function () {
     };
     TripPlanComponent.prototype.saveChanges = function () {
         var _this = this;
-        var plan = new userTrip_1.UserTrip();
-        plan.loginName = this.user.loginName;
+        var plan = new userTrip_1.UserTrip(this.user.loginName);
         plan.budget = this.budget;
         plan.days = this.days;
         this.tripPlanService.saveUserPlan(plan)
             .then(function () {
             //this.showSuccess("Saved user categories");
-            _this.navigateToCal();
+            _this.compute();
         })
             .catch(function () {
             // this.showError("Failed to save user categories");
@@ -60,6 +72,7 @@ TripPlanComponent = __decorate([
         templateUrl: './tripPlan.html'
     }),
     __metadata("design:paramtypes", [tripPlan_service_1.TripPlanService,
+        compute_service_1.ComputeService,
         router_1.Router])
 ], TripPlanComponent);
 exports.TripPlanComponent = TripPlanComponent;

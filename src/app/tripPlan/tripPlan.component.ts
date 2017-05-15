@@ -4,6 +4,8 @@ import {Utils} from "../utils/utils";
 import {User} from "../models/user";
 import {UserTrip} from "../models/userTrip";
 import { Router} from '@angular/router';
+import {Category} from "../models/category";
+import {ComputeService} from "../compute/services/compute.service";
 
 @Component({
     selector: 'tripPlan',
@@ -14,23 +16,39 @@ import { Router} from '@angular/router';
 export class TripPlanComponent implements OnInit {
 
     user: User;
-    budget : String;
-    days : String;
+    budget : string;
+    days : string;
     userTrips: UserTrip[];
+   numberOfLocations: number;
+    comutedArray: Category[];
 
     constructor(private   tripPlanService: TripPlanService,
+                private computeService:ComputeService,
                 private   router: Router) {
 
         this.user = Utils.getUserFromStorage();
     }
 
     ngOnInit(): void {
+        this.numberOfLocations=3;
+
+    }
+
+    compute(): void {
+
+        this.computeService.compute(this.user.loginName, this.numberOfLocations)
+            .then((ans: Category[]) => {
+                this.comutedArray = ans;
+            })
+            .catch((error) => {
+                console.log("You remembered to check for errors!" + error);
+            });
 
 
     }
 
-    navigateToCal(): void{
-        this.router.navigate(['/cal']);
+    navigateToCal(location: string): void{
+        this.router.navigate(['/cal'], { queryParams: { location: location }});
     }
     getUserTrips(): void{
         this.tripPlanService.getUserPlan(this.user.loginName)
@@ -43,14 +61,13 @@ export class TripPlanComponent implements OnInit {
     }
 
     saveChanges(): void {
-        let plan = new UserTrip();
-        plan.loginName=this.user.loginName;
+        let plan = new UserTrip(this.user.loginName);
         plan.budget=this.budget;
         plan.days=this.days;
         this.tripPlanService.saveUserPlan(plan)
             .then(() => {
                 //this.showSuccess("Saved user categories");
-                this.navigateToCal();
+                this.compute();
             })
             .catch(() => {
                // this.showError("Failed to save user categories");

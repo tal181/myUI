@@ -16,6 +16,7 @@ var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var compute_service_1 = require("../compute/services/compute.service");
 var utils_1 = require("../utils/utils");
 var activity_service_1 = require("../activity/services/activity.service");
+var router_1 = require("@angular/router");
 var colors = {
     red: {
         primary: '#ad2121',
@@ -31,11 +32,12 @@ var colors = {
     }
 };
 var CalenderComponent = (function () {
-    function CalenderComponent(modal, computeService, activityService) {
+    function CalenderComponent(modal, computeService, activityService, activatedRoute) {
         var _this = this;
         this.modal = modal;
         this.computeService = computeService;
         this.activityService = activityService;
+        this.activatedRoute = activatedRoute;
         this.view = 'month';
         this.viewDate = new Date();
         this.refresh = new Subject_1.Subject();
@@ -57,16 +59,13 @@ var CalenderComponent = (function () {
         this.user = utils_1.Utils.getUserFromStorage();
         this.numberOfActivities = 9;
         this.numberOfActivitiesPerDay = 3;
+        this.startHour = 60 * 8; //8 AM
     }
     CalenderComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        this.computeService.compute(this.user.loginName, this.numberOfActivities)
-            .then(function (ans) {
-            _this.comutedArray = ans;
-            _this.getBestActivities(ans[0].location, _this.numberOfActivities);
-        })
-            .catch(function (error) {
-            console.log("You remembered to check for errors!" + error);
+        this.activatedRoute.params.subscribe(function (params) {
+            var location = params['location']; //todo need to fix
+            _this.getBestActivities(location, _this.numberOfActivities);
         });
     };
     CalenderComponent.prototype.getBestActivities = function (location, countResults) {
@@ -81,17 +80,17 @@ var CalenderComponent = (function () {
                 var endIndex = Math.min(startIndex + _this.numberOfActivitiesPerDay, _this.bestActivities.length);
                 var subArray = _this.bestActivities.slice(startIndex, endIndex);
                 startIndex += _this.numberOfActivitiesPerDay;
-                var startHour = 60;
+                _this.startHour = 60 * 8;
                 for (var index2 = 0; index2 < subArray.length; index2++) {
                     var event_1 = {
-                        start: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), startHour),
-                        end: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), startHour + subArray[index2].suggestedDuration),
+                        start: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), _this.startHour),
+                        end: date_fns_1.addMinutes(date_fns_1.addDays(date_fns_1.startOfDay(new Date()), day), _this.startHour + subArray[index2].suggestedDuration),
                         title: subArray[index2].activityName,
                         color: colors.red,
                         actions: _this.actions
                     };
                     _this.events.push(event_1);
-                    startHour += subArray[index2].suggestedDuration;
+                    _this.startHour += subArray[index2].suggestedDuration;
                 }
                 day++;
             }
@@ -190,7 +189,8 @@ CalenderComponent = __decorate([
     }),
     __metadata("design:paramtypes", [ng_bootstrap_1.NgbModal,
         compute_service_1.ComputeService,
-        activity_service_1.ActivityService])
+        activity_service_1.ActivityService,
+        router_1.ActivatedRoute])
 ], CalenderComponent);
 exports.CalenderComponent = CalenderComponent;
 //# sourceMappingURL=calender-component.js.map

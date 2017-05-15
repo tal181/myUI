@@ -23,6 +23,7 @@ import {Activity} from "../models/activity";
 import {Utils} from "../utils/utils";
 import {User} from "../models/user";
 import {ActivityService} from "../activity/services/activity.service";
+import {Router, ActivatedRoute, Params} from '@angular/router';
 
 const colors: any = {
     red: {
@@ -59,6 +60,7 @@ export class CalenderComponent  implements AfterViewInit  {
     events: CalendarEvent[];
     numberOfActivities: number;
     numberOfActivitiesPerDay: number;
+    startHour:number;
 
     modalData: {
         action: string,
@@ -71,25 +73,21 @@ export class CalenderComponent  implements AfterViewInit  {
 
     constructor(private modal: NgbModal,
                 private   computeService: ComputeService,
-                private activityService: ActivityService) {
+                private activityService: ActivityService,
+                private activatedRoute: ActivatedRoute) {
         this.user = Utils.getUserFromStorage();
         this.numberOfActivities=9;
         this.numberOfActivitiesPerDay=3;
+        this.startHour=60*8; //8 AM
 
     }
 
     ngAfterViewInit(): void {
 
-        this.computeService.compute(this.user.loginName, this.numberOfActivities)
-            .then((ans: Category[]) => {
-                this.comutedArray = ans;
-                this.getBestActivities(ans[0].location,this.numberOfActivities);
-            })
-            .catch((error) => {
-                console.log("You remembered to check for errors!" + error);
-            });
-
-
+        this.activatedRoute.params.subscribe((params: Params) => {
+            let location = params['location']; //todo need to fix
+            this.getBestActivities(location,this.numberOfActivities);
+        });
     }
 
     getBestActivities(location: string,countResults: number): void{
@@ -103,16 +101,17 @@ export class CalenderComponent  implements AfterViewInit  {
                     let endIndex=Math.min(startIndex+this.numberOfActivitiesPerDay,this.bestActivities.length);
                     let subArray = this.bestActivities.slice(startIndex,endIndex);
                     startIndex+=this.numberOfActivitiesPerDay;
-                    let startHour=60;
+
+                    this.startHour=60*8;
                     for(let index2=0;index2<subArray.length;index2++){
                         let event = {
-                            start : addMinutes(addDays(startOfDay(new Date()), day),startHour),
-                            end : addMinutes(addDays(startOfDay(new Date()), day),startHour+subArray[index2].suggestedDuration),
+                            start : addMinutes(addDays(startOfDay(new Date()), day),this.startHour),
+                            end : addMinutes(addDays(startOfDay(new Date()), day),this.startHour+subArray[index2].suggestedDuration),
                             title : subArray[index2].activityName,
                             color : colors.red,
                             actions : this.actions};
                         this.events.push(event);
-                        startHour+=subArray[index2].suggestedDuration;
+                        this.startHour+=subArray[index2].suggestedDuration;
                     }
                     day++;
                 }
