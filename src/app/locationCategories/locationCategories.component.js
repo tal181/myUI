@@ -95,9 +95,6 @@ var LocationCategoriesComponent = (function () {
             console.log("You remembered to check for errors!");
         });
     };
-    LocationCategoriesComponent.prototype.saveChanges = function () {
-        this.alertService.success('saveUserCategories');
-    };
     return LocationCategoriesComponent;
 }());
 LocationCategoriesComponent = __decorate([

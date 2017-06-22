@@ -105,7 +105,7 @@ export class LocationCategoriesComponent implements OnInit {
                 console.log("You remembered to check for errors!");
             });
     }
-    saveChanges():void {
-        this.alertService.success('saveUserCategories')
-    }
+    // saveChanges():void {
+    //     this.alertService.success('saveUserCategories')
+    // }
 }
