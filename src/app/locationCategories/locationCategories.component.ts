@@ -6,6 +6,7 @@ import 'rxjs/add/operator/toPromise';
 import {AllCategoriesService} from "../allCategories/services/allCategories.service";
 import {CountriesService} from "../countries/services/countriess.service";
 import {AlertService} from "../login/services/alert.service";
+import {CitiesService} from "../cities/services/cities.service";
 
 @Component({
     selector:'locationPref',
@@ -17,7 +18,7 @@ export class LocationCategoriesComponent implements OnInit {
     categories: Category[];
     allCategories: Category[];
     contiresArray: any;
-    selectedValue: any;
+    allCities: any;
     countriesMap: any;
     citiesSelectedValue: any;
     citiesSelectedArray: any;
@@ -27,7 +28,10 @@ export class LocationCategoriesComponent implements OnInit {
         private locationCategoriesService: LocationCategoriesService,
         private allCategoriesService: AllCategoriesService,
         private countriesService: CountriesService,
-        private alertService: AlertService) {
+        private alertService: AlertService,
+        private citiesService: CitiesService) {
+        this.contiresArray = [];
+        this.allCities = [];
     }
     ngOnInit(): void {
         this.allCategoriesService.getAllCategories()
@@ -40,30 +44,59 @@ export class LocationCategoriesComponent implements OnInit {
 
         this.countriesService.getAllCountries()
             .then((countries: any) => {
-                let contiresArrayKeys = Object.keys(countries);
-                this.contiresArray = this.createArray(contiresArrayKeys);
-                this.countrySelectedValue = this.contiresArray[0];
-                this.countriesMap = countries;
+                this.contiresArray=this.createCountriesArray(countries);
+
+
+                //this.contiresArray.push({label:'New York', value:{id:'12f', name: 'New York'}});
+               // this.contiresArray.push({label:'Rome', value:{id:'123f', name: 'Rome'}});
             })
             .catch(() => {
                 console.log("You remembered to check for errors!");
             });
         this.locationCats = new Array<Category>();
     }
-    createArray(array: any): any{
+    createCountriesArray(countries: any): any{
         let newArray=[];
-        for(let index=0;index<array.length;index++){
-            let ele= {label: array[index], value: {id: array[index], name: array[index]}};
+        for(let index=0;index<countries.length;index++){
+            let ele= {label: countries[index].countryName, value: {id: countries[index].countryId}};
             newArray.push(ele);
         }
         return newArray;
     }
-    onCountryChange(): void{
-        let citiesSelectedKeys = this.countriesMap[ this.countrySelectedValue.id];
-        this.citiesSelectedArray = this.createArray(citiesSelectedKeys);
-        this.citiesSelectedValue = this.citiesSelectedArray[0];
+    createCitiesArray(cities: any): any{
+        let newArray=[];
+        for(let index=0;index<cities.length;index++){
+            let ele= {label: cities[index].locationName, value: {id: cities[index].locationId}};
+            newArray.push(ele);
+        }
+        return newArray;
     }
-    onCityChange(): void{
+
+    getCities(countryId: string){
+        this.citiesService.getAllCitiesByCountryId(countryId)
+            .then((allCities) => {
+                this.citiesSelectedArray = this.createCitiesArray(allCities);
+                this.citiesSelectedValue = this.citiesSelectedArray[0];
+            })
+            .catch(() => {
+                console.log("You remembered to check for errors!");
+            });
+    }
+    onCountryChange(): void{
+        let countryId = this.countrySelectedValue.id;
+        this.getCities(countryId);
+    }
+    onCityChange(): void {
+
+        // this.countriesService.getAllCitiesByCountryId()
+        //     .then((countries: any) => {
+        //         this.contiresArray = countries;
+        //     })
+        //     .catch(() => {
+        //         console.log("You remembered to check for errors!");
+        //     });
+        //
+
         this.locationCategoriesService.getLocationCategories(this.citiesSelectedValue.id)
             .then((locationCats) => {
               this.locationCats=locationCats;

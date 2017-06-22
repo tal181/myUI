@@ -37,6 +37,7 @@ import {GrowlModule} from 'primeng/primeng';
 import {DropdownModule} from 'primeng/primeng';
 import {TripPlanComponent} from "./tripPlan/tripPlan.component";
 import {TripPlanService} from "./tripPlan/services/tripPlan.service";
+import {CitiesService} from "./cities/services/cities.service";
 @NgModule({
   imports: [
       BrowserAnimationsModule,
@@ -77,7 +78,8 @@ import {TripPlanService} from "./tripPlan/services/tripPlan.service";
       CountriesService,
       ComputeService,
       ActivityService,
-      TripPlanService
+      TripPlanService,
+      CitiesService
   ],
    exports: [
        CalenderComponent],

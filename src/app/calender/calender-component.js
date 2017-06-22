@@ -63,8 +63,8 @@ var CalenderComponent = (function () {
     }
     CalenderComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        this.activatedRoute.params.subscribe(function (params) {
-            var location = params['location']; //todo need to fix
+        this.activatedRoute.queryParams.subscribe(function (params) {
+            var location = params['location'];
             _this.getBestActivities(location, _this.numberOfActivities);
         });
     };

@@ -39,6 +39,7 @@ var primeng_3 = require("primeng/primeng");
 var primeng_4 = require("primeng/primeng");
 var tripPlan_component_1 = require("./tripPlan/tripPlan.component");
 var tripPlan_service_1 = require("./tripPlan/services/tripPlan.service");
+var cities_service_1 = require("./cities/services/cities.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -83,7 +84,8 @@ AppModule = __decorate([
             countriess_service_1.CountriesService,
             compute_service_1.ComputeService,
             activity_service_1.ActivityService,
-            tripPlan_service_1.TripPlanService
+            tripPlan_service_1.TripPlanService,
+            cities_service_1.CitiesService
         ],
         exports: [
             calender_component_1.CalenderComponent

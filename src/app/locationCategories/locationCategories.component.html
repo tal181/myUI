@@ -4,7 +4,7 @@
 <h3 class="first">Countires</h3>
 <p-dropdown [options]="contiresArray" [(ngModel)]="countrySelectedValue" [style]="{'width':'150px'}"
             (onChange)="onCountryChange()" placeholder="Select a Country"></p-dropdown>
-<p>Selected City: {{countrySelectedValue ? countrySelectedValue.name : 'none'}}</p>
+<p>Selected City: {{countrySelectedValue ? countrySelectedValue.countryName : 'none'}}</p>
 
 <!--cities-->
 <h3 class="first">cities</h3>

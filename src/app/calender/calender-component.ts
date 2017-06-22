@@ -84,8 +84,8 @@ export class CalenderComponent  implements AfterViewInit  {
 
     ngAfterViewInit(): void {
 
-        this.activatedRoute.params.subscribe((params: Params) => {
-            let location = params['location']; //todo need to fix
+        this.activatedRoute.queryParams.subscribe((params: Params) => {
+            let location = params['location']; 
             this.getBestActivities(location,this.numberOfActivities);
         });
     }
